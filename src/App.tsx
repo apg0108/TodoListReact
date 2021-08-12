@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import Form from 'components/Form';
+import Heading from 'components/Heading';
+import ToDoItem from 'components/ToDoItem';
+import { useState } from 'react';
 import './App.css';
 
 function App() {
+  const initialStateToDo: string[] = [];
+  const [items, setItems] = useState(initialStateToDo);
+
+  function addTodo(toDoValue: string) {
+    if (toDoValue !== '') setItems(prevItems => [...prevItems, toDoValue]);
+    else alert('Input empty!');
+  }
+
+  function deleteItem(id: number) {
+    setItems(prevItem => {
+      return prevItem.filter((item, index) => {
+        return index !== id;
+      });
+    });
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="todo-container">
+      <Heading />
+      <Form onAdd={addTodo} />
+      {items.map((item, index) => (
+        <ToDoItem key={index} id={index} text={item} onChecked={deleteItem} />
+      ))}
     </div>
   );
 }
